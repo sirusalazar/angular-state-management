@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductListComponent } from '../product-list/product-list.component';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
+import { Store } from '@ngrx/store';
+import * as productsState from '../../../store/state/products.state';
 
 @Component({
   selector: 'app-products-page',
@@ -25,4 +27,12 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
     `,
   ],
 })
-export class ProductsPageComponent {}
+export class ProductsPageComponent implements OnInit {
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.store
+      .select(productsState.selectProducts)
+      .subscribe((products) => console.log('products....', products));
+  }
+}

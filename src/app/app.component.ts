@@ -3,11 +3,15 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatBadge } from '@angular/material/badge';
+import { Store } from '@ngrx/store';
+import { AsyncPipe } from '@angular/common';
+
+import { CartState } from '@app-store/state';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatToolbar, RouterOutlet, RouterLink, MatIcon, MatBadge],
+  imports: [MatToolbar, RouterOutlet, RouterLink, MatIcon, MatBadge, AsyncPipe],
   template: `
     <div class="main-container">
       <mat-toolbar color="primary" class="header">
@@ -19,7 +23,7 @@ import { MatBadge } from '@angular/material/badge';
           <a mat-button routerLink="/cart"
             >Cart
             <span
-              [matBadge]="0"
+              [matBadge]="itemsCount$ | async"
               matBadgePosition="below"
               matBadgeColor="warn"
             ></span>
@@ -66,4 +70,9 @@ import { MatBadge } from '@angular/material/badge';
     `,
   ],
 })
-export class AppComponent {}
+export class AppComponent {
+  protected readonly itemsCount$ = this.store.select(
+    CartState.selectItemsCount
+  );
+  constructor(private store: Store) {}
+}
