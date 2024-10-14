@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
 
 import { CartState } from '@app-store/state';
+import { ProductsPageActions } from '@app-store/actions';
 
 @Component({
   selector: 'app-root',
@@ -70,9 +71,12 @@ import { CartState } from '@app-store/state';
     `,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   protected readonly itemsCount$ = this.store.select(
     CartState.selectItemsCount
   );
   constructor(private store: Store) {}
+  ngOnInit(): void {
+    this.store.dispatch(ProductsPageActions.loadProducts());
+  }
 }
