@@ -1,33 +1,22 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { CartReducer as fromCart } from '@app-store/reducers';
+import { cartReducer, State } from '@app-store/reducers/cart.reducer';
 
 export const FEATURE_KEY = 'cart';
 
-export interface State {
-  cart: fromCart.State;
-}
-
-export const reducers = {
-  cart: fromCart.cartReducer,
-};
+export const reducers = cartReducer;
 
 export const selectCartState = createFeatureSelector<State>(FEATURE_KEY);
 
-const selectCartSlice = createSelector(
-  selectCartState,
-  (state: State) => state.cart
-);
-
 // Selector to get all items
 export const selectCartItems = createSelector(
-  selectCartSlice,
+  selectCartState,
   (state) => state.cartItems
 );
 
 //selector to get error
 export const selectError = createSelector(
-  selectCartSlice,
+  selectCartState,
   (state) => state.error
 );
 

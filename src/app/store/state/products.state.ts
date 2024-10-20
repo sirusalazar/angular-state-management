@@ -1,31 +1,24 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ProductReducer as fromProducts } from '@app-store/reducers';
+import {
+  ProductsState,
+  productsReducer,
+} from '@app-store/reducers/products.reducer';
 
 export const FEATURE_KEY = 'products';
 
-export interface State {
-  products: fromProducts.ProductsState;
-}
+export const reducers = productsReducer;
 
-export const reducers = {
-  products: fromProducts.productsReducer,
-};
-
-export const selectProductsState = createFeatureSelector<State>(FEATURE_KEY);
-
-const selectProductsSlice = createSelector(
-  selectProductsState,
-  (state: State) => state.products
-);
+export const selectProductsState =
+  createFeatureSelector<ProductsState>(FEATURE_KEY);
 
 // Selector to get products
 export const selectProducts = createSelector(
-  selectProductsSlice,
+  selectProductsState,
   (state) => state.products
 );
 
 //selector to get error
 export const selectError = createSelector(
-  selectProductsSlice,
+  selectProductsState,
   (state) => state.error
 );
