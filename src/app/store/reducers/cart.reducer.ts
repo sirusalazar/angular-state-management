@@ -19,7 +19,7 @@ export const cartReducer = createReducer(
     return { ...state, cartItems: [...state.cartItems, cartItem] };
   }),
   on(CartActions.removeItemFromCart, (state, { itemId }): State => {
-    const cartItems = state.cartItems.filter((c) => c.product?.id === itemId);
+    const cartItems = state.cartItems.filter((c) => c.product?.id !== itemId);
     return { ...state, cartItems };
   })
 );
