@@ -1,19 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, ReactiveFormsModule],
   template: `
     <div class="stepper">
       <div class="controls">
-        <button mat-flat-button color="primary">-</button>
+        <button mat-flat-button color="primary" (click)="updateQuantity(-1)">
+          -
+        </button>
         <div class="input-wrapper">
-          <input type="number" min="0" value="0" />
+          <input type="number" min="1" value="0" [formControl]="control" />
           <label>Quantity</label>
         </div>
-        <button mat-flat-button color="primary">+</button>
+        <button mat-flat-button color="primary" (click)="updateQuantity(+1)">
+          +
+        </button>
       </div>
     </div>
   `,
@@ -73,4 +78,10 @@ import { MatButtonModule } from '@angular/material/button';
     `,
   ],
 })
-export class StepperComponent {}
+export class StepperComponent {
+  @Input({ required: true }) control!: FormControl;
+
+  updateQuantity(qtty: number) {
+    this.control.setValue(this.control.value + qtty);
+  }
+}

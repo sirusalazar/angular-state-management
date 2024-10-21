@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CartItem } from '../../../models/cart-item';
+import { CartPageStore } from '../cart-page/cart-page.component.store';
 
 @Component({
   selector: 'app-cart-list-item',
@@ -12,7 +13,7 @@ import { CartItem } from '../../../models/cart-item';
     <mat-card>
       <mat-card-content>
         <div class="cart-item">
-          <div class="cart-item__section">
+          <div class="cart-item__section image">
             <img
               src="{{ item.product?.image }}"
               alt="{{ item.product?.image }}"
@@ -20,16 +21,21 @@ import { CartItem } from '../../../models/cart-item';
           </div>
           <div class="cart-item__section">
             <h4>{{ item.product?.title }}</h4>
-            <span>{{ item.product?.description }}</span>
+            <span class="description">{{ item.product?.description }}</span>
           </div>
           <div class="cart-item__section">
             <span>{{ item.quantity }}</span>
           </div>
-          <div class="cart-item__section">
+          <div class="cart-item__section total">
             <strong>{{ item.total }}</strong>
           </div>
           <div class="cart-item__section">
-            <mat-icon color="warn" matTooltip="remove">delete</mat-icon>
+            <mat-icon
+              color="warn"
+              matTooltip="remove"
+              (click)="store.removeItem(item.product?.id ?? -1)"
+              >delete</mat-icon
+            >
           </div>
         </div>
       </mat-card-content>
@@ -39,22 +45,11 @@ import { CartItem } from '../../../models/cart-item';
     `
       .cart-item {
         display: flex;
-        border-radius: 4px;
-        box-shadow: var(--mdc-elevated-card-container-shape);
       }
 
       .mat-mdc-card {
         height: 135px;
-      }
-
-      .cart-item__image {
-        width: 100px;
-
-        img {
-          max-width: 100%;
-          width: auto;
-          height: 100px;
-        }
+        margin: 10px 0;
       }
 
       .cart-item__section {
@@ -62,6 +57,26 @@ import { CartItem } from '../../../models/cart-item';
         flex-direction: column;
         justify-content: center;
         padding: 0 25px;
+
+        &.image {
+          width: 100px;
+          img {
+            max-width: 100%;
+            width: auto;
+            height: 100px;
+          }
+        }
+
+        .description {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 620px;
+        }
+
+        &.total {
+          width: 50px;
+        }
       }
 
       mat-icon {
@@ -71,5 +86,6 @@ import { CartItem } from '../../../models/cart-item';
   ],
 })
 export class CartListItemComponent {
-  item: CartItem = {} as CartItem;
+  @Input({ required: true }) item!: CartItem;
+  constructor(readonly store: CartPageStore) {}
 }

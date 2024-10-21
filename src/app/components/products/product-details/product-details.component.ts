@@ -1,24 +1,43 @@
 import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { StepperComponent } from './stepper/stepper.component';
+import { ProductsPageStore } from '../products-page/products-page.component.store';
+import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
+import { StepperComponent } from '@app-shared/components/stepper/stepper.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, StepperComponent],
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    StepperComponent,
+    AsyncPipe,
+    NgIf,
+    JsonPipe,
+  ],
   template: `
     <h3>Product Details</h3>
     <mat-card class="card-container">
-      <img mat-card-image src="/assets/images/fallback-image.png" alt="" />
-      <mat-card-content>
-        <h4>Product name</h4>
-        <p></p>
-        <app-stepper />
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary">ADD TO CART</button>
-      </mat-card-actions>
+      <ng-container *ngIf="store.selectedProduct$ | async as item">
+        <div class="img-container">
+          <img mat-card-image [src]="item.image" alt="" />
+        </div>
+        <mat-card-content>
+          <h4>{{ item.title }}</h4>
+          <p>{{ item.description }}</p>
+          <app-stepper [control]="store.quantityFormControl" />
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="store.addItemToCart()"
+          >
+            ADD TO CART
+          </button>
+        </mat-card-actions>
+      </ng-container>
     </mat-card>
   `,
   styles: [
@@ -28,19 +47,31 @@ import { StepperComponent } from './stepper/stepper.component';
         text-align: center;
       }
       .card-container {
-        min-width: 350px;
+        width: 350px;
+      }
+      .img-container {
+        width: 100%;
+        height: 250px;
+        display: flex;
+        align-items: center;
       }
       .mat-mdc-card-image {
-        height: 200px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        max-height: 100%;
       }
 
       .mat-mdc-card-content {
-        height: 200px;
+        height: 250px;
         display: flex;
         flex-direction: column;
 
         p {
           flex-grow: 1;
+          max-height: 115px;
+          overflow-y: auto;
         }
       }
       .mdc-button {
@@ -49,4 +80,6 @@ import { StepperComponent } from './stepper/stepper.component';
     `,
   ],
 })
-export class ProductDetailsComponent {}
+export class ProductDetailsComponent {
+  constructor(protected readonly store: ProductsPageStore) {}
+}

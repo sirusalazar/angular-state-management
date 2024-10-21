@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { CartPageStore } from '../cart-page/cart-page.component.store';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-cart-summary',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatDividerModule],
+  imports: [MatCardModule, MatButtonModule, MatDividerModule, AsyncPipe],
   template: `
     <mat-card class="summary">
       <mat-card-content>
@@ -14,8 +16,8 @@ import { MatDividerModule } from '@angular/material/divider';
         <mat-divider></mat-divider>
         <div class="products">
           <div>
-            <span>Products Shipping</span>
-            <span>$ 0</span>
+            <span>Products</span>
+            <span>$ {{ store.total$ | async }}</span>
           </div>
           <div>
             <span>Shipping</span>
@@ -25,11 +27,13 @@ import { MatDividerModule } from '@angular/material/divider';
         <mat-divider></mat-divider>
         <div class="totals">
           <strong>Total</strong>
-          <strong>$ 0</strong>
+          <strong>$ {{ store.total$ | async }}</strong>
         </div>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-flat-button color="primary">GO TO CHECKOUT</button>
+        <button mat-flat-button color="primary" (click)="store.submitOrder()">
+          GO TO CHECKOUT
+        </button>
       </mat-card-actions>
     </mat-card>
   `,
@@ -64,4 +68,6 @@ import { MatDividerModule } from '@angular/material/divider';
     `,
   ],
 })
-export class CartSummaryComponent {}
+export class CartSummaryComponent {
+  constructor(protected readonly store: CartPageStore) {}
+}

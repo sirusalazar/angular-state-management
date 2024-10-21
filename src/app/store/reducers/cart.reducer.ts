@@ -21,5 +21,8 @@ export const cartReducer = createReducer(
   on(CartActions.removeItemFromCart, (state, { itemId }): State => {
     const cartItems = state.cartItems.filter((c) => c.product?.id !== itemId);
     return { ...state, cartItems };
+  }),
+  on(CartActions.submitOrder, () => {
+    return { ...initialState };
   })
 );

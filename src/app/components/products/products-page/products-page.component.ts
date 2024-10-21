@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ProductListComponent } from '../product-list/product-list.component';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
-import { Store } from '@ngrx/store';
-import * as productsState from '../../../store/state/products.state';
+import { provideComponentStore } from '@ngrx/component-store';
+import { ProductsPageStore } from './products-page.component.store';
 
 @Component({
   selector: 'app-products-page',
   standalone: true,
+  providers: [provideComponentStore(ProductsPageStore)],
   imports: [ProductListComponent, ProductDetailsComponent],
   template: `<div class="container">
     <app-product-list />
@@ -27,12 +28,4 @@ import * as productsState from '../../../store/state/products.state';
     `,
   ],
 })
-export class ProductsPageComponent implements OnInit {
-  constructor(private store: Store) {}
-
-  ngOnInit(): void {
-    this.store
-      .select(productsState.selectProducts)
-      .subscribe((products) => console.log('products....', products));
-  }
-}
+export class ProductsPageComponent {}

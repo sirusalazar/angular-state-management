@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { CartListItemComponent } from '../cart-list-item/cart-list-item.component';
-import { NgFor } from '@angular/common';
-import { CartItem } from '../../../models/cart-item';
-
-const CART_ITEMS: CartItem[] = [];
+import { AsyncPipe, NgFor } from '@angular/common';
+import { CartPageStore } from '../cart-page/cart-page.component.store';
 
 @Component({
   selector: 'app-cart-list',
   standalone: true,
-  imports: [NgFor, CartListItemComponent],
+  imports: [NgFor, CartListItemComponent, AsyncPipe],
   template: `
     <h2>Shopping Cart</h2>
-    <app-cart-list-item *ngFor="let item of cartItems" />
+    <app-cart-list-item
+      *ngFor="let item of store.items$ | async"
+      [item]="item"
+    />
   `,
   styles: [
     `
@@ -22,5 +23,5 @@ const CART_ITEMS: CartItem[] = [];
   ],
 })
 export class CartListComponent {
-  cartItems = CART_ITEMS;
+  constructor(protected readonly store: CartPageStore) {}
 }
