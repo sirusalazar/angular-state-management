@@ -32,13 +32,13 @@ export const productsReducer = createReducer(
   on(
     ProductsPageActions.updateProductsStock,
     (state, { order }): ProductsState => {
-      const products = [...state.products];
-      order.items.forEach((item) => {
-        const index = products.findIndex((p) => p.id === item.product?.id);
-        const product = products[index];
-        products[index] = { ...product, stock: product.stock - item.quantity };
+      const updatedProducts = state.products.map((product) => {
+        const item = order.items.find((i) => i.product?.id === product.id);
+        return item
+          ? { ...product, stock: product.stock - item.quantity }
+          : product;
       });
-      return { ...state, products: [...products] };
+      return { ...state, products: [...updatedProducts] };
     }
   )
 );
