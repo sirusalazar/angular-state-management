@@ -12,4 +12,9 @@ module.exports = {
     transform: {
       '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },
+    moduleNameMapper: {
+      "^@app-store/(.*)":"<rootDir>/src/app/store/$1",
+      "^@app-shared/(.*)":"<rootDir>/src/app/shared/$1",
+      '^@app-models$': '<rootDir>/src/app/models'
+    },
   };

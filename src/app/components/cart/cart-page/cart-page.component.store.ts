@@ -20,6 +20,7 @@ export class CartPageStore extends ComponentStore<State> {
   readonly items$ = this.store
     .select(CartState.selectCartItems)
     .pipe(tap((items) => this.patchState({ items })));
+
   readonly total$ = this.select(this.items$, (items) =>
     items.map((i) => i.total).reduce((a, b) => a + b, 0)
   );
