@@ -9,14 +9,24 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     <div class="stepper">
       <div class="controls">
-        <button mat-flat-button color="primary" (click)="updateQuantity(-1)">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="updateQuantity(-1)"
+          [disabled]="!minusBtnEnabled"
+        >
           -
         </button>
         <div class="input-wrapper">
           <input type="number" min="1" value="0" [formControl]="control" />
           <label>Quantity</label>
         </div>
-        <button mat-flat-button color="primary" (click)="updateQuantity(+1)">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="updateQuantity(+1)"
+          [disabled]="!plusBtnEnabled"
+        >
           +
         </button>
       </div>
@@ -80,6 +90,8 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class StepperComponent {
   @Input({ required: true }) control!: FormControl;
+  @Input() minusBtnEnabled!: boolean;
+  @Input() plusBtnEnabled!: boolean;
 
   updateQuantity(qtty: number) {
     this.control.setValue(this.control.value + qtty);

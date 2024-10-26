@@ -18,8 +18,8 @@ import { ProductsPageStore } from '../products-page/products-page.component.stor
   ],
   template: `
     <h2>Product List</h2>
-    <ng-container *ngIf="store.products$ | async as products">
-      <table mat-table [dataSource]="products" class="mat-elevation-z1">
+    <ng-container *ngIf="store.vm$ | async as vm">
+      <table mat-table [dataSource]="vm.products" class="mat-elevation-z1">
         <ng-container matColumnDef="image">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
@@ -71,7 +71,7 @@ import { ProductsPageStore } from '../products-page/products-page.component.stor
 
         <tr
           mat-footer-row
-          [hidden]="products.length > 0"
+          [hidden]="vm.products.length > 0"
           *matFooterRowDef="['nodata']"
         ></tr>
       </table>
