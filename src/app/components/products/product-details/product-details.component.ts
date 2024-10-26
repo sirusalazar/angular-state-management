@@ -19,20 +19,31 @@ import { StepperComponent } from '@app-shared/components/stepper/stepper.compone
   template: `
     <h3>Product Details</h3>
     <mat-card class="card-container">
-      <ng-container *ngIf="store.selectedProduct$ | async as item">
+      <ng-container *ngIf="store.vm$ | async as vm">
         <div class="img-container">
-          <img mat-card-image [src]="item.image" alt="" />
+          <img
+            mat-card-image
+            [src]="
+              vm.selectedProduct?.image ?? '/assets/images/fallback-image.png'
+            "
+            alt=""
+          />
         </div>
         <mat-card-content>
-          <h4>{{ item.title }}</h4>
-          <p>{{ item.description }}</p>
-          <app-stepper [control]="store.quantityFormControl" />
+          <h4>{{ vm.selectedProduct?.title }}</h4>
+          <p>{{ vm.selectedProduct?.description }}</p>
+          <app-stepper
+            [control]="store.quantityFormControl"
+            [minusBtnEnabled]="vm.minusEnabled"
+            [plusBtnEnabled]="vm.plusBtnEnabled"
+          />
         </mat-card-content>
         <mat-card-actions>
           <button
             mat-flat-button
             color="primary"
             (click)="store.addItemToCart()"
+            [disabled]="!vm.checkoutBtnEnabled"
           >
             ADD TO CART
           </button>

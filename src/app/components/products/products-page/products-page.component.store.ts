@@ -27,8 +27,18 @@ export class ProductsPageStore
 
   //#region selectors
 
-  readonly products$ = this.store.select(ProductsState.selectProducts);
-  readonly selectedProduct$ = this.select((state) => state.selectedProduct);
+  readonly vm$ = this.select(
+    this.store.select(ProductsState.selectProducts),
+    this.select((state) => state.selectedProduct),
+    this.select((state) => state.quantity),
+    (products, selectedProduct, quantity) => ({
+      products,
+      selectedProduct,
+      minusEnabled: !!selectedProduct && quantity > 1,
+      plusBtnEnabled: !!(selectedProduct && selectedProduct.stock > quantity),
+      checkoutBtnEnabled: !!selectedProduct,
+    })
+  );
 
   //#endregion
   constructor(private readonly store: Store) {
@@ -78,9 +88,17 @@ export class ProductsPageStore
               },
             })
           );
+          this.resetState();
         }
       })
     );
   });
   //#endregion
+
+  //#region  utils
+  private resetState() {
+    this.patchState({ selectedProduct: undefined });
+    this.quantityFormControl.setValue(1);
+  }
+  ////#endregion
 }
