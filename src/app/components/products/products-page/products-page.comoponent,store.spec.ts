@@ -1,6 +1,5 @@
 import { createServiceFactory } from '@ngneat/spectator/jest';
 import { ProductsPageStore } from './products-page.component.store';
-import { provideComponentStore } from '@ngrx/component-store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ProductsState } from '@app-store/state';
 import { Product, mockProduct } from '@app-models';
@@ -27,10 +26,10 @@ describe('ProductsPageComponent', () => {
     const { spectator } = setup({ products });
 
     //Act
-    const result = subscribeSpyTo(spectator.service.products$);
+    const vm = subscribeSpyTo(spectator.service.vm$).getLastValue();
 
     //Assert
-    expect(result.getLastValue()).toBe(products);
+    expect(vm?.products).toBe(products);
   });
 
   it('should select product when the effect is invoked', () => {
@@ -39,11 +38,11 @@ describe('ProductsPageComponent', () => {
     const { spectator } = setup();
 
     //Act
-    const result = subscribeSpyTo(spectator.service.selectedProduct$);
+    const vm = subscribeSpyTo(spectator.service.vm$);
     spectator.service.selectProduct(product);
 
     //Assert
-    expect(result.getLastValue()).toBe(product);
+    expect(vm.getLastValue()?.selectedProduct).toBe(product);
   });
 
   it('should add a new product to the cart', () => {
